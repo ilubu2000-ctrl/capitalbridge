@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CapitalBridge | Document Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #112240;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.12);
+    --cream: #f8f4ed;
+    --white: #ffffff;
+    --gray: #8892a4;
+    --light-gray: #e8ecf0;
+    --green: #1a8f5a;
+    --green-dim: rgba(26,143,90,0.12);
+    --red: #c0392b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'DM Sans',sans-serif;
+    background:var(--navy);
+    min-height:100vh;
+    color:var(--white);
+  }
+
+  /* BACKGROUND */
+  .bg {
+    position:fixed; inset:0; z-index:0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.04) 0%, transparent 50%),
+                var(--navy);
+  }
+  .bg::before {
+    content:''; position:absolute; inset:0;
+    background-image: repeating-linear-gradient(
+      0deg, transparent, transparent 60px,
+      rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px
+    ),
+    repeating-linear-gradient(
+      90deg, transparent, transparent 60px,
+      rgba(255,255,255,0.015) 60px, rgba(255,255,255,0.015) 61px
+    );
+  }
+
+  .wrap { position:relative; z-index:1; max-width:680px; margin:0 auto; padding:3rem 1.5rem 5rem; }
+
+  /* HEADER */
+  .portal-header { text-align:center; margin-bottom:3rem; animation:fadeUp 0.6s ease; }
+  .logo { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--white); margin-bottom:0.25rem; }
+  .logo span { color:var(--gold); }
+  .logo-sub { font-size:0.7rem; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:2rem; }
+  .client-greeting { margin-top:1.5rem; }
+  .client-greeting h1 { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; line-height:1.2; margin-bottom:0.75rem; }
+  .client-greeting h1 span { color:var(--gold); }
+  .client-greeting p { color:rgba(255,255,255,0.55); font-size:0.92rem; line-height:1.6; max-width:480px; margin:0 auto; }
+
+  /* PROGRESS */
+  .progress-bar {
+    display:flex; align-items:center; justify-content:center;
+    gap:0; margin:2.5rem 0; animation:fadeUp 0.6s ease 0.1s both;
+  }
+  .step {
+    display:flex; flex-direction:column; align-items:center; gap:0.35rem;
+    position:relative;
+  }
+  .step-dot {
+    width:32px; height:32px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; font-weight:700; transition:all 0.3s;
+    border:2px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.3);
+  }
+  .step-dot.done { background:var(--green); border-color:var(--green); color:var(--white); }
+  .step-dot.active { background:var(--gold); border-color:var(--gold); color:var(--navy); }
+  .step-label { font-size:0.65rem; color:rgba(255,255,255,0.3); letter-spacing:0.5px; white-space:nowrap; }
+  .step-label.active { color:var(--gold); }
+  .step-line { width:60px; height:2px; background:rgba(255,255,255,0.1); margin-bottom:1.2rem; }
+  .step-line.done { background:var(--green); }
+
+  /* CARDS */
+  .card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px; padding:1.75rem;
+    margin-bottom:1.25rem;
+    animation:fadeUp 0.5s ease both;
+  }
+  .card:nth-child(1) { animation-delay:0.15s; }
+  .card:nth-child(2) { animation-delay:0.2s; }
+  .card:nth-child(3) { animation-delay:0.25s; }
+  .card:nth-child(4) { animation-delay:0.3s; }
+  .card:nth-child(5) { animation-delay:0.35s; }
+  .card:nth-child(6) { animation-delay:0.4s; }
+  .card:nth-child(7) { animation-delay:0.45s; }
+
+  .card-header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem; }
+  .card-icon {
+    width:38px; height:38px; border-radius:10px;
+    background:var(--gold-dim); border:1px solid rgba(201,168,76,0.2);
+    display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;
+  }
+  .card-title { font-size:0.95rem; font-weight:700; color:var(--white); }
+  .card-sub { font-size:0.75rem; color:rgba(255,255,255,0.4); margin-top:1px; }
+  .required-badge { margin-left:auto; font-size:0.65rem; font-weight:700; letter-spacing:0.5px; padding:0.2rem 0.6rem; border-radius:10px; }
+  .required-badge.req { background:rgba(192,57,43,0.2); color:#e74c3c; border:1px solid rgba(192,57,43,0.3); }
+  .required-badge.opt { background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.3); }
+
+  /* UPLOAD ZONE */
+  .upload-zone {
+    border:2px dashed rgba(255,255,255,0.12); border-radius:10px;
+    padding:1.5rem; text-align:center; cursor:pointer;
+    transition:all 0.2s; position:relative; background:rgba(255,255,255,0.02);
+  }
+  .upload-zone:hover, .upload-zone.dragover {
+    border-color:var(--gold); background:rgba(201,168,76,0.05);
+  }
+  .upload-zone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+  .upload-zone-icon { font-size:1.5rem; margin-bottom:0.4rem; }
+  .upload-zone p { font-size:0.82rem; color:rgba(255,255,255,0.45); }
+  .upload-zone small { font-size:0.7rem; color:rgba(255,255,255,0.25); }
+
+  /* FILE LIST */
+  .file-list { margin-top:0.75rem; display:flex; flex-direction:column; gap:0.4rem; }
+  .file-item {
+    display:flex; align-items:center; gap:0.65rem;
+    padding:0.55rem 0.8rem; background:rgba(255,255,255,0.05);
+    border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+  }
+  .file-icon { font-size:1rem; flex-shrink:0; }
+  .file-name { font-size:0.8rem; color:rgba(255,255,255,0.7); flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .file-size { font-size:0.7rem; color:rgba(255,255,255,0.3); flex-shrink:0; }
+  .file-status { font-size:0.7rem; flex-shrink:0; }
+  .file-del { background:none; border:none; color:rgba(255,255,255,0.25); cursor:pointer; font-size:0.85rem; transition:color 0.2s; }
+  .file-del:hover { color:#e74c3c; }
+
+  /* OTHER DOCS */
+  .other-input {
+    width:100%; padding:0.75rem 1rem;
+    background:rgba(255,255,255,0.05); border:1.5px solid rgba(255,255,255,0.1);
+    border-radius:8px; color:var(--white); font-family:'DM Sans',sans-serif;
+    font-size:0.88rem; outline:none; transition:border 0.2s; margin-bottom:0.75rem;
+  }
+  .other-input:focus { border-color:var(--gold); }
+  .other-input::placeholder { color:rgba(255,255,255,0.25); }
+
+  /* SUBMIT */
+  .submit-wrap { margin-top:2rem; animation:fadeUp 0.5s ease 0.5s both; }
+  .submit-btn {
+    width:100%; padding:1.1rem;
+    background:var(--gold); color:var(--navy);
+    border:none; border-radius:12px;
+    font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:700;
+    cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center; gap:0.5rem;
+  }
+  .submit-btn:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 8px 30px rgba(201,168,76,0.3); }
+  .submit-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+  .submit-note { text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.25); margin-top:0.75rem; }
+
+  /* SUCCESS */
+  #successScreen {
+    display:none; text-align:center;
+    padding:4rem 2rem; animation:fadeUp 0.5s ease;
+  }
+  .success-icon { font-size:4rem; margin-bottom:1.5rem; }
+  .success-title { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; color:var(--white); margin-bottom:0.75rem; }
+  .success-sub { color:rgba(255,255,255,0.5); font-size:0.92rem; line-height:1.6; max-width:400px; margin:0 auto 2rem; }
+  .success-card {
+    background:rgba(26,143,90,0.1); border:1px solid rgba(26,143,90,0.25);
+    border-radius:12px; padding:1.25rem; max-width:360px; margin:0 auto;
+  }
+  .success-card p { font-size:0.82rem; color:rgba(255,255,255,0.6); line-height:1.7; }
+
+  /* LOADING OVERLAY */
+  #loadingOverlay {
+    display:none; position:fixed; inset:0; z-index:999;
+    background:rgba(10,22,40,0.85); backdrop-filter:blur(4px);
+    align-items:center; justify-content:center; flex-direction:column; gap:1.5rem;
+  }
+  #loadingOverlay.show { display:flex; }
+  .loading-spinner {
+    width:50px; height:50px; border-radius:50%;
+    border:3px solid rgba(201,168,76,0.2);
+    border-top-color:var(--gold);
+    animation:spin 0.8s linear infinite;
+  }
+  .loading-text { color:rgba(255,255,255,0.6); font-size:0.88rem; }
+  .loading-progress { color:var(--gold); font-size:0.82rem; font-weight:600; }
+
+  /* ERROR */
+  .error-msg { color:#e74c3c; font-size:0.8rem; margin-top:0.5rem; display:none; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes spin { to{transform:rotate(360deg)} }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="portal-header">
+    <div class="logo">Capital<span>Bridge</span></div>
+    <div class="logo-sub">Secure Document Portal</div>
+    <div class="client-greeting">
+      <h1>Welcome, <span id="clientNameDisplay">—</span></h1>
+      <p>Please upload your documents below. All files are encrypted and stored securely. Our team will review them within 1–2 business days.</p>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar">
+    <div class="step">
+      <div class="step-dot done">✓</div>
+      <div class="step-label">Eligibility</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step">
+      <div class="step-dot done">✓</div>
+      <div class="step-label">Consultation</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot active">3</div>
+      <div class="step-label active">Documents</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot">4</div>
+      <div class="step-label">Review</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-dot">5</div>
+      <div class="step-label">Funding</div>
+    </div>
+  </div>
+
+  <!-- UPLOAD FORM -->
+  <div id="uploadForm">
+
+    <!-- Tax Returns -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📄</div>
+        <div>
+          <div class="card-title">Tax Returns</div>
+          <div class="card-sub">Personal & Business — last 3 years</div>
+        </div>
+        <span class="required-badge opt">Recommended</span>
+      </div>
+      <div class="upload-zone" id="zone-tax">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="addFiles('tax', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>PDF, JPG, PNG accepted</small>
+      </div>
+      <div class="file-list" id="list-tax"></div>
+    </div>
+
+    <!-- P&L / Balance Sheet -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📊</div>
+        <div>
+          <div class="card-title">Financial Statements</div>
+          <div class="card-sub">P&L Statement & Balance Sheet (within 90 days)</div>
+        </div>
+        <span class="required-badge opt">Recommended</span>
+      </div>
+      <div class="upload-zone" id="zone-financial">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx" onchange="addFiles('financial', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>PDF, Excel, JPG accepted</small>
+      </div>
+      <div class="file-list" id="list-financial"></div>
+    </div>
+
+    <!-- ID -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🪪</div>
+        <div>
+          <div class="card-title">Government-Issued ID</div>
+          <div class="card-sub">Driver's License or Passport (all owners)</div>
+        </div>
+        <span class="required-badge opt">Recommended</span>
+      </div>
+      <div class="upload-zone" id="zone-id">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="addFiles('id', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>PDF, JPG, PNG accepted</small>
+      </div>
+      <div class="file-list" id="list-id"></div>
+    </div>
+
+    <!-- Business Docs -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏢</div>
+        <div>
+          <div class="card-title">Business Documents</div>
+          <div class="card-sub">Business License, Articles of Incorporation, Operating Agreement</div>
+        </div>
+        <span class="required-badge opt">Recommended</span>
+      </div>
+      <div class="upload-zone" id="zone-business">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="addFiles('business', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>PDF, Word, JPG accepted</small>
+      </div>
+      <div class="file-list" id="list-business"></div>
+    </div>
+
+    <!-- Bank Statements -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🏦</div>
+        <div>
+          <div class="card-title">Bank Statements</div>
+          <div class="card-sub">Business bank statements — last 6 months</div>
+        </div>
+        <span class="required-badge opt">Recommended</span>
+      </div>
+      <div class="upload-zone" id="zone-bank">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="addFiles('bank', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>PDF, JPG accepted</small>
+      </div>
+      <div class="file-list" id="list-bank"></div>
+    </div>
+
+    <!-- Other -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📎</div>
+        <div>
+          <div class="card-title">Other Documents</div>
+          <div class="card-sub">Any additional documents you'd like to include</div>
+        </div>
+        <span class="required-badge opt">Optional</span>
+      </div>
+      <input type="text" class="other-input" id="otherNote" placeholder="Describe what you're uploading (e.g. lease agreement, franchise disclosure)">
+      <div class="upload-zone" id="zone-other">
+        <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx" onchange="addFiles('other', this.files)">
+        <div class="upload-zone-icon">📂</div>
+        <p>Click or drag & drop</p>
+        <small>Any file type accepted</small>
+      </div>
+      <div class="file-list" id="list-other"></div>
+    </div>
+
+    <div class="error-msg" id="submitError">⚠️ Please upload at least the required documents before submitting.</div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap">
+      <button class="submit-btn" id="submitBtn" onclick="submitDocuments()">
+        🔒 Submit Documents Securely
+      </button>
+      <div class="submit-note">Your files are encrypted and only accessible by CapitalBridge staff.</div>
+    </div>
+
+  </div><!-- /uploadForm -->
+
+  <!-- SUCCESS -->
+  <div id="successScreen">
+    <div class="success-icon">✅</div>
+    <div class="success-title">Documents Submitted!</div>
+    <div class="success-sub">Thank you! Our team will review your documents within 1–2 business days and reach out to you shortly.</div>
+    <div class="success-card">
+      <p>📞 Questions? Call us anytime<br>
+      <strong style="color:var(--white)">(310) 999-9999</strong><br><br>
+      📧 Or email us at<br>
+      <strong style="color:var(--white)">info@capitalbridge.com</strong></p>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- LOADING -->
+<div id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Uploading your documents securely...</div>
+  <div class="loading-progress" id="loadingProgress"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG — Google Apps Script URL
+// ═══════════════════════════════════════
+const PORTAL_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4wXNehk8a84skJaD16JFJXIrjfk1GNh1AtpN3DPqSM9I-5rDf8uyGeN_vH-Y0UGIH2g/exec';
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const categories = { tax:[], financial:[], id:[], business:[], bank:[], other:[] };
+
+// URL에서 client 정보 파싱
+// 링크 형식: client-portal.html?id=CLIENT_ID&name=John+Kim&email=john@example.com
+const params = new URLSearchParams(window.location.search);
+const clientId   = params.get('id')   || '';
+const clientName = params.get('name') ? decodeURIComponent(params.get('name')) : 'Valued Client';
+const clientEmail = params.get('email') ? decodeURIComponent(params.get('email')) : '';
+
+document.getElementById('clientNameDisplay').textContent = clientName.split(' ')[0];
+
+// ═══════════════════════════════════════
+// FILE HANDLING
+// ═══════════════════════════════════════
+function fileIcon(name) {
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  if (ext === 'pdf') return '📄';
+  if (['jpg','jpeg','png','gif'].includes(ext)) return '🖼️';
+  if (['doc','docx'].includes(ext)) return '📝';
+  if (['xls','xlsx'].includes(ext)) return '📊';
+  return '📎';
+}
+
+function formatSize(b) {
+  if (b < 1024) return b + 'B';
+  if (b < 1048576) return (b/1024).toFixed(1) + 'KB';
+  return (b/1048576).toFixed(1) + 'MB';
+}
+
+function addFiles(cat, fileList) {
+  Array.from(fileList).forEach(file => {
+    if (categories[cat].find(f => f.name === file.name)) return;
+    categories[cat].push(file);
+  });
+  renderFileList(cat);
+}
+
+function removeFile(cat, idx) {
+  categories[cat].splice(idx, 1);
+  renderFileList(cat);
+}
+
+function renderFileList(cat) {
+  const el = document.getElementById('list-' + cat);
+  el.innerHTML = '';
+  categories[cat].forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'file-item';
+    div.innerHTML = `
+      <span class="file-icon">${fileIcon(f.name)}</span>
+      <span class="file-name">${f.name}</span>
+      <span class="file-size">${formatSize(f.size)}</span>
+      <button class="file-del" onclick="removeFile('${cat}',${i})">✕</button>`;
+    el.appendChild(div);
+  });
+}
+
+// Drag & drop for each zone
+['tax','financial','id','business','bank','other'].forEach(cat => {
+  const zone = document.getElementById('zone-' + cat);
+  zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault(); zone.classList.remove('dragover');
+    addFiles(cat, e.dataTransfer.files);
+  });
+});
+
+// ═══════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function submitDocuments() {
+  // 최소 1개 파일 확인
+  const totalFiles = Object.values(categories).reduce((a, b) => a + b.length, 0);
+  if (totalFiles === 0) {
+    const errEl = document.getElementById('submitError');
+    errEl.style.display = 'block';
+    errEl.textContent = '⚠️ Please upload at least one document before submitting.';
+    return;
+  }
+  document.getElementById('submitError').style.display = 'none';
+
+  const overlay  = document.getElementById('loadingOverlay');
+  const progText = document.getElementById('loadingProgress');
+  overlay.classList.add('show');
+  document.getElementById('submitBtn').disabled = true;
+
+  // Collect all files
+  const allFiles = [];
+  for (const [cat, files] of Object.entries(categories)) {
+    for (const file of files) {
+      allFiles.push({ cat, file });
+    }
+  }
+
+  const otherNote = document.getElementById('otherNote').value.trim();
+
+  // Convert to base64 and upload in batches
+  const fileData = [];
+  for (let i = 0; i < allFiles.length; i++) {
+    const { cat, file } = allFiles[i];
+    progText.textContent = `Processing file ${i+1} of ${allFiles.length}: ${file.name}`;
+    try {
+      const base64 = await fileToBase64(file);
+      fileData.push({
+        category: cat,
+        name: file.name,
+        mimeType: file.type || 'application/octet-stream',
+        data: base64,
+        size: file.size
+      });
+    } catch(e) {
+      console.error('Error reading file:', file.name, e);
+    }
+  }
+
+  progText.textContent = 'Uploading to secure server...';
+
+  try {
+    const payload = {
+      clientId,
+      clientName,
+      clientEmail,
+      otherNote,
+      files: fileData,
+      submittedAt: new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles' })
+    };
+
+    // Google Apps Script POST — no-cors, text/plain (Apps Script 호환)
+    await fetch(PORTAL_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+
+    // no-cors는 응답을 읽을 수 없으므로 업로드 완료로 처리
+    overlay.classList.remove('show');
+    document.getElementById('uploadForm').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo({ top:0, behavior:'smooth' });
+  } catch(err) {
+    overlay.classList.remove('show');
+    document.getElementById('submitBtn').disabled = false;
+    const errEl = document.getElementById('submitError');
+    errEl.style.display = 'block';
+    errEl.textContent = '⚠️ Upload failed: ' + err.message + ' — Please try again or contact us at (310) 999-9999';
+  }
+}
+</script>
+</body>
+</html>
