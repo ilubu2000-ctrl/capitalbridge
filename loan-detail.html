@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SBA Loan Programs | CapitalBridge</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0a1628;--navy-mid:#112240;--gold:#c9a84c;--gold-light:#e8c97a;--cream:#f8f4ed;--white:#fff;--gray:#8892a4;--light-gray:#e8ecf0;--green:#1a8f5a;--red:#c0392b;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--navy);}
+  nav{position:fixed;top:0;width:100%;z-index:1000;background:rgba(10,22,40,0.97);backdrop-filter:blur(10px);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;border-bottom:1px solid rgba(201,168,76,0.2);}
+  .logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--white);letter-spacing:-.5px;text-decoration:none;}
+  .logo span{color:var(--gold);}
+  nav ul{list-style:none;display:flex;gap:2rem;}
+  nav ul a{color:rgba(255,255,255,.75);text-decoration:none;font-size:.9rem;font-weight:500;transition:color .2s;}
+  nav ul a:hover{color:var(--gold);}
+  .page-hero{padding:140px 5% 80px;background:var(--navy);text-align:center;}
+  .page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.5rem);font-weight:900;color:var(--white);margin-bottom:1rem;}
+  .page-hero h1 em{color:var(--gold);font-style:normal;}
+  .page-hero p{color:rgba(255,255,255,.6);font-size:1.05rem;max-width:560px;margin:0 auto;line-height:1.7;}
+  /* TABS */
+  .tabs-nav{display:flex;justify-content:center;gap:.5rem;padding:2.5rem 5% 0;background:var(--navy);flex-wrap:wrap;}
+  .tab-btn{padding:.65rem 1.5rem;border-radius:30px;border:1.5px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.6);font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;}
+  .tab-btn:hover{border-color:var(--gold);color:var(--gold);}
+  .tab-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+  /* LOAN DETAIL */
+  .loan-panel{display:none;padding:70px 5%;}
+  .loan-panel.active{display:block;}
+  .panel-inner{max-width:900px;margin:0 auto;}
+  .panel-header{display:flex;align-items:flex-start;gap:1.5rem;margin-bottom:3rem;flex-wrap:wrap;}
+  .panel-icon{font-size:3rem;width:80px;height:80px;background:rgba(201,168,76,.12);border-radius:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .panel-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;color:var(--navy);margin-bottom:.4rem;}
+  .panel-subtitle{font-size:1rem;color:var(--gray);line-height:1.6;}
+  .panel-tag{display:inline-block;margin-top:.5rem;background:rgba(26,143,90,.1);color:var(--green);font-size:.78rem;font-weight:700;padding:.3rem .8rem;border-radius:20px;}
+  /* SPECS */
+  .specs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:3rem;}
+  .spec-card{background:var(--white);border-radius:12px;padding:1.25rem;border:1.5px solid var(--light-gray);text-align:center;}
+  .spec-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray);margin-bottom:.4rem;}
+  .spec-value{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--navy);}
+  /* PRO/CON */
+  .procon{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:3rem;}
+  .procon-box{background:var(--white);border-radius:14px;padding:1.75rem;border:1.5px solid var(--light-gray);}
+  .procon-box.pros{border-top:3px solid var(--green);}
+  .procon-box.cons{border-top:3px solid var(--red);}
+  .procon-title{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:1rem;}
+  .procon-box.pros .procon-title{color:var(--green);}
+  .procon-box.cons .procon-title{color:var(--red);}
+  .procon-list{list-style:none;}
+  .procon-list li{font-size:.88rem;color:var(--navy);padding:.4rem 0;padding-left:1.4rem;position:relative;line-height:1.5;}
+  .procon-box.pros .procon-list li::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700;}
+  .procon-box.cons .procon-list li::before{content:'✗';position:absolute;left:0;color:var(--red);font-weight:700;}
+  /* BEST FOR */
+  .best-for{background:var(--white);border-radius:14px;padding:1.75rem;border:1.5px solid var(--light-gray);margin-bottom:3rem;}
+  .best-for h3{font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gold);margin-bottom:1rem;}
+  .best-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+  .best-tag{background:rgba(201,168,76,.1);border:1.5px solid rgba(201,168,76,.25);color:var(--navy);padding:.4rem .9rem;border-radius:20px;font-size:.82rem;font-weight:500;}
+  /* CTA */
+  .panel-cta{background:var(--navy);border-radius:16px;padding:2.5rem;text-align:center;color:var(--white);}
+  .panel-cta h3{font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:.75rem;}
+  .panel-cta p{color:rgba(255,255,255,.6);margin-bottom:1.5rem;font-size:.95rem;}
+  .btn-gold{display:inline-block;background:var(--gold);color:var(--navy);padding:.85rem 2rem;border-radius:8px;font-weight:700;font-size:.95rem;text-decoration:none;margin:.35rem;transition:all .2s;}
+  .btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);}
+  .btn-outline-white{display:inline-block;border:1.5px solid rgba(255,255,255,.3);color:var(--white);padding:.85rem 2rem;border-radius:8px;font-weight:600;font-size:.95rem;text-decoration:none;margin:.35rem;transition:all .2s;}
+  .btn-outline-white:hover{border-color:var(--gold);color:var(--gold);}
+  /* COMPARISON TABLE */
+  .comparison-section{padding:70px 5%;background:var(--white);}
+  .comparison-section h2{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3vw,2.5rem);font-weight:800;text-align:center;margin-bottom:.5rem;}
+  .comparison-section p{text-align:center;color:var(--gray);margin-bottom:3rem;}
+  .comp-table{width:100%;border-collapse:collapse;font-size:.88rem;overflow:hidden;border-radius:14px;box-shadow:0 4px 24px rgba(10,22,40,.08);}
+  .comp-table th{background:var(--navy);color:var(--white);padding:1rem 1.25rem;text-align:left;font-weight:600;font-size:.82rem;}
+  .comp-table th:first-child{border-radius:14px 0 0 0;}
+  .comp-table th:last-child{border-radius:0 14px 0 0;}
+  .comp-table td{padding:.9rem 1.25rem;border-bottom:1px solid var(--light-gray);vertical-align:middle;}
+  .comp-table tr:hover td{background:rgba(201,168,76,.04);}
+  .comp-table tr:last-child td{border-bottom:none;}
+  .comp-table td:first-child{font-weight:700;color:var(--navy);}
+  .badge-green{background:rgba(26,143,90,.1);color:var(--green);padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:600;}
+  .badge-gold{background:rgba(201,168,76,.15);color:#8a6a1a;padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:600;}
+  .badge-gray{background:rgba(136,146,164,.12);color:var(--gray);padding:.2rem .6rem;border-radius:10px;font-size:.75rem;font-weight:600;}
+  footer{background:var(--navy);color:rgba(255,255,255,.4);padding:2.5rem 5%;text-align:center;font-size:.85rem;}
+  .footer-logo{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--white);font-weight:700;margin-bottom:.5rem;}
+  .footer-logo span{color:var(--gold);}
+  @media(max-width:640px){.procon{grid-template-columns:1fr;}.panel-header{gap:1rem;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Capital<span>Bridge</span></a>
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="loan-detail.html" style="color:var(--gold)">Loan Programs</a></li>
+    <li><a href="eligibility.html">Check Eligibility</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <h1>SBA Loan <em>Programs</em></h1>
+  <p>Compare the four core SBA loan programs and find the right fit for your business.</p>
+</div>
+
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="showTab('7a')">SBA 7(a)</button>
+  <button class="tab-btn" onclick="showTab('504')">SBA 504</button>
+  <button class="tab-btn" onclick="showTab('express')">SBA Express</button>
+  <button class="tab-btn" onclick="showTab('usda')">USDA B&amp;I</button>
+</div>
+
+<!-- ══ SBA 7(a) ══ -->
+<div class="loan-panel active" id="panel-7a">
+  <div class="panel-inner">
+    <div class="panel-header">
+      <div class="panel-icon">💼</div>
+      <div>
+        <div class="panel-title">SBA 7(a) Loan</div>
+        <div class="panel-subtitle">The most versatile SBA program — works for almost any business purpose including working capital, equipment, real estate, acquisitions, and refinancing.</div>
+        <span class="panel-tag">Most Popular · Up to $5,000,000</span>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-card"><div class="spec-label">Max Loan</div><div class="spec-value">$5,000,000</div></div>
+      <div class="spec-card"><div class="spec-label">SBA Guarantee</div><div class="spec-value">75–85%</div></div>
+      <div class="spec-card"><div class="spec-label">Down Payment</div><div class="spec-value">10–20%</div></div>
+      <div class="spec-card"><div class="spec-label">Real Estate Term</div><div class="spec-value">25 years</div></div>
+      <div class="spec-card"><div class="spec-label">Working Capital</div><div class="spec-value">10 years</div></div>
+      <div class="spec-card"><div class="spec-label">Approval Time</div><div class="spec-value">30–90 days</div></div>
+    </div>
+    <div class="procon">
+      <div class="procon-box pros">
+        <div class="procon-title">✅ Advantages</div>
+        <ul class="procon-list">
+          <li>Widest range of eligible uses</li>
+          <li>Competitive, capped interest rates</li>
+          <li>Low down payment vs conventional</li>
+          <li>Can finance working capital + real estate together</li>
+          <li>Available for acquisitions &amp; franchise</li>
+          <li>Long repayment terms reduce monthly burden</li>
+        </ul>
+      </div>
+      <div class="procon-box cons">
+        <div class="procon-title">⚠️ Considerations</div>
+        <ul class="procon-list">
+          <li>Requires strong personal credit (680+)</li>
+          <li>All owners must be U.S. Citizens</li>
+          <li>Collateral typically required over $50K</li>
+          <li>Longer process than conventional loans</li>
+          <li>Personal guarantee required</li>
+        </ul>
+      </div>
+    </div>
+    <div class="best-for">
+      <h3>🎯 Best For</h3>
+      <div class="best-tags">
+        <span class="best-tag">Business Acquisition</span>
+        <span class="best-tag">Commercial Real Estate</span>
+        <span class="best-tag">Working Capital</span>
+        <span class="best-tag">Equipment Purchase</span>
+        <span class="best-tag">Franchise Purchase</span>
+        <span class="best-tag">Debt Refinancing</span>
+        <span class="best-tag">Restaurant / Retail</span>
+        <span class="best-tag">Healthcare Practice</span>
+      </div>
+    </div>
+    <div class="panel-cta">
+      <h3>Ready to Apply for a 7(a) Loan?</h3>
+      <p>Check your eligibility in under 3 minutes. No credit pull required.</p>
+      <a href="eligibility.html" class="btn-gold">Check My Eligibility →</a>
+      <a href="tel:+13109999999" class="btn-outline-white">📞 Talk to a Specialist</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SBA 504 ══ -->
+<div class="loan-panel" id="panel-504">
+  <div class="panel-inner">
+    <div class="panel-header">
+      <div class="panel-icon">🏗️</div>
+      <div>
+        <div class="panel-title">SBA 504 Loan</div>
+        <div class="panel-subtitle">Purpose-built for major fixed assets — commercial real estate and heavy equipment. Offers below-market fixed rates and the lowest down payment available.</div>
+        <span class="panel-tag">Fixed Assets Only · Up to $5,500,000</span>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-card"><div class="spec-label">Max SBA Portion</div><div class="spec-value">$5,500,000</div></div>
+      <div class="spec-card"><div class="spec-label">Structure</div><div class="spec-value">50/40/10</div></div>
+      <div class="spec-card"><div class="spec-label">Down Payment</div><div class="spec-value">10%</div></div>
+      <div class="spec-card"><div class="spec-label">Rate Type</div><div class="spec-value">Fixed</div></div>
+      <div class="spec-card"><div class="spec-label">Term</div><div class="spec-value">20–25 years</div></div>
+      <div class="spec-card"><div class="spec-label">Jobs Required</div><div class="spec-value">1 per $75K</div></div>
+    </div>
+    <div style="background:rgba(201,168,76,.08);border:1.5px solid rgba(201,168,76,.25);border-radius:12px;padding:1.25rem;margin-bottom:2rem;">
+      <p style="font-size:.88rem;color:var(--navy);font-weight:600;margin-bottom:.4rem;">📐 How the 50/40/10 Structure Works</p>
+      <p style="font-size:.83rem;color:var(--gray);line-height:1.65;">50% from a conventional bank lender · 40% from SBA via a Certified Development Company (CDC) · 10% borrower down payment. Startups or special-purpose properties may require 15–20% down.</p>
+    </div>
+    <div class="procon">
+      <div class="procon-box pros">
+        <div class="procon-title">✅ Advantages</div>
+        <ul class="procon-list">
+          <li>Lowest possible fixed interest rate</li>
+          <li>Only 10% down payment</li>
+          <li>25-year fixed rate = predictable payments</li>
+          <li>Up to $5.5M SBA portion (total project can be larger)</li>
+          <li>Ideal for owner-occupied commercial real estate</li>
+        </ul>
+      </div>
+      <div class="procon-box cons">
+        <div class="procon-title">⚠️ Considerations</div>
+        <ul class="procon-list">
+          <li>Real estate or fixed assets only — no working capital</li>
+          <li>Must create or retain 1 job per $75K SBA funds</li>
+          <li>Business must occupy 51%+ of property</li>
+          <li>More complex two-lender structure</li>
+          <li>Longer closing timeline (60–120 days)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="best-for">
+      <h3>🎯 Best For</h3>
+      <div class="best-tags">
+        <span class="best-tag">Commercial Real Estate Purchase</span>
+        <span class="best-tag">Owner-Occupied Building</span>
+        <span class="best-tag">Heavy Equipment</span>
+        <span class="best-tag">Hotel / Motel</span>
+        <span class="best-tag">Manufacturing Facility</span>
+        <span class="best-tag">Medical Office</span>
+      </div>
+    </div>
+    <div class="panel-cta">
+      <h3>Is SBA 504 Right for You?</h3>
+      <p>Our brokers specialize in 504 structuring for Korean-American business owners.</p>
+      <a href="eligibility.html" class="btn-gold">Check My Eligibility →</a>
+      <a href="tel:+13109999999" class="btn-outline-white">📞 Talk to a Specialist</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SBA Express ══ -->
+<div class="loan-panel" id="panel-express">
+  <div class="panel-inner">
+    <div class="panel-header">
+      <div class="panel-icon">⚡</div>
+      <div>
+        <div class="panel-title">SBA Express Loan</div>
+        <div class="panel-subtitle">Fast-track SBA lending with a 36-hour SBA response time. Streamlined documentation for qualified borrowers who need capital quickly.</div>
+        <span class="panel-tag">Fast Approval · Up to $500,000</span>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-card"><div class="spec-label">Max Loan</div><div class="spec-value">$500,000</div></div>
+      <div class="spec-card"><div class="spec-label">SBA Response</div><div class="spec-value">36 Hours</div></div>
+      <div class="spec-card"><div class="spec-label">SBA Guarantee</div><div class="spec-value">50%</div></div>
+      <div class="spec-card"><div class="spec-label">Term</div><div class="spec-value">Up to 10 yrs</div></div>
+      <div class="spec-card"><div class="spec-label">Line of Credit</div><div class="spec-value">Available</div></div>
+      <div class="spec-card"><div class="spec-label">Veteran Fee</div><div class="spec-value">$0</div></div>
+    </div>
+    <div class="procon">
+      <div class="procon-box pros">
+        <div class="procon-title">✅ Advantages</div>
+        <ul class="procon-list">
+          <li>Fastest SBA approval — 36-hour SBA response</li>
+          <li>Simplified, reduced documentation</li>
+          <li>Can be structured as revolving line of credit</li>
+          <li>No SBA upfront fee for veterans</li>
+          <li>Flexible use of funds</li>
+        </ul>
+      </div>
+      <div class="procon-box cons">
+        <div class="procon-title">⚠️ Considerations</div>
+        <ul class="procon-list">
+          <li>Lower SBA guarantee (50%) = higher lender scrutiny</li>
+          <li>Capped at $500K — not for large projects</li>
+          <li>Higher credit score expectations</li>
+          <li>Shorter terms than standard 7(a)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="best-for">
+      <h3>🎯 Best For</h3>
+      <div class="best-tags">
+        <span class="best-tag">Quick Working Capital</span>
+        <span class="best-tag">Business Line of Credit</span>
+        <span class="best-tag">Veteran-Owned Business</span>
+        <span class="best-tag">Equipment Under $500K</span>
+        <span class="best-tag">Established Business 2+ Years</span>
+      </div>
+    </div>
+    <div class="panel-cta">
+      <h3>Need Funds Fast?</h3>
+      <p>SBA Express is designed for speed. Let's see if you qualify.</p>
+      <a href="eligibility.html" class="btn-gold">Check My Eligibility →</a>
+      <a href="tel:+13109999999" class="btn-outline-white">📞 Talk to a Specialist</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ USDA B&I ══ -->
+<div class="loan-panel" id="panel-usda">
+  <div class="panel-inner">
+    <div class="panel-header">
+      <div class="panel-icon">🌾</div>
+      <div>
+        <div class="panel-title">USDA B&amp;I Loan</div>
+        <div class="panel-subtitle">USDA Business &amp; Industry loan for rural area businesses. Larger loan limits and more flexible ownership requirements than SBA programs.</div>
+        <span class="panel-tag">Rural Areas · Up to $25,000,000</span>
+      </div>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-card"><div class="spec-label">Max Loan</div><div class="spec-value">$25,000,000</div></div>
+      <div class="spec-card"><div class="spec-label">USDA Guarantee</div><div class="spec-value">60–80%</div></div>
+      <div class="spec-card"><div class="spec-label">Down Payment</div><div class="spec-value">10–20%</div></div>
+      <div class="spec-card"><div class="spec-label">Term (Real Estate)</div><div class="spec-value">30 years</div></div>
+      <div class="spec-card"><div class="spec-label">Term (Equipment)</div><div class="spec-value">15 years</div></div>
+      <div class="spec-card"><div class="spec-label">Location</div><div class="spec-value">&lt;50K pop.</div></div>
+    </div>
+    <div style="background:rgba(26,143,90,.06);border:1.5px solid rgba(26,143,90,.2);border-radius:12px;padding:1.25rem;margin-bottom:2rem;">
+      <p style="font-size:.88rem;color:var(--navy);font-weight:600;margin-bottom:.4rem;">📍 Rural Area Definition</p>
+      <p style="font-size:.83rem;color:var(--gray);line-height:1.65;">Business must be located in a city or town with a population under 50,000 that is not adjacent to a metropolitan area. Check eligibility at the USDA eligibility map.</p>
+    </div>
+    <div class="procon">
+      <div class="procon-box pros">
+        <div class="procon-title">✅ Advantages</div>
+        <ul class="procon-list">
+          <li>Much higher loan limits than SBA ($25M)</li>
+          <li>More flexible ownership/citizenship requirements</li>
+          <li>30-year terms for real estate</li>
+          <li>Supports investment properties (not just owner-occupied)</li>
+          <li>Great for hotels, self-storage, manufacturing in rural areas</li>
+        </ul>
+      </div>
+      <div class="procon-box cons">
+        <div class="procon-title">⚠️ Considerations</div>
+        <ul class="procon-list">
+          <li>Rural location required (&lt;50K population)</li>
+          <li>Slower approval than SBA Express</li>
+          <li>Annual renewal fee on guaranteed portion</li>
+          <li>More limited lender pool</li>
+        </ul>
+      </div>
+    </div>
+    <div class="best-for">
+      <h3>🎯 Best For</h3>
+      <div class="best-tags">
+        <span class="best-tag">Rural Hotel / Motel</span>
+        <span class="best-tag">Self Storage Facility</span>
+        <span class="best-tag">Manufacturing Plant</span>
+        <span class="best-tag">Investment Real Estate (Rural)</span>
+        <span class="best-tag">Non-Citizen Owned Business</span>
+        <span class="best-tag">Large Projects $5M+</span>
+      </div>
+    </div>
+    <div class="panel-cta">
+      <h3>Is Your Business in a Rural Area?</h3>
+      <p>We'll check USDA eligibility for your specific address at no cost.</p>
+      <a href="eligibility.html" class="btn-gold">Check My Eligibility →</a>
+      <a href="tel:+13109999999" class="btn-outline-white">📞 Talk to a Specialist</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMPARISON TABLE ══ -->
+<div class="comparison-section">
+  <h2>Side-by-Side Comparison</h2>
+  <p style="color:var(--gray);margin-bottom:3rem;">Compare all four programs at a glance.</p>
+  <div style="overflow-x:auto;">
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>SBA 7(a)</th>
+          <th>SBA 504</th>
+          <th>SBA Express</th>
+          <th>USDA B&amp;I</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Max Loan Amount</td><td>$5,000,000</td><td>$5,500,000 (SBA portion)</td><td>$500,000</td><td>$25,000,000</td></tr>
+        <tr><td>Down Payment</td><td>10–20%</td><td><span class="badge-green">10% min</span></td><td>Varies</td><td>10–20%</td></tr>
+        <tr><td>Interest Rate</td><td>Variable (Prime + spread)</td><td><span class="badge-green">Fixed (below market)</span></td><td>Variable</td><td>Negotiated</td></tr>
+        <tr><td>Max Term (Real Estate)</td><td>25 years</td><td>25 years</td><td>10 years</td><td><span class="badge-green">30 years</span></td></tr>
+        <tr><td>Approval Speed</td><td>30–90 days</td><td>60–120 days</td><td><span class="badge-green">36-hr SBA response</span></td><td>60–120 days</td></tr>
+        <tr><td>Working Capital</td><td><span class="badge-green">✓ Yes</span></td><td><span class="badge-gray">✗ No</span></td><td><span class="badge-green">✓ Yes</span></td><td><span class="badge-green">✓ Yes</span></td></tr>
+        <tr><td>Real Estate</td><td><span class="badge-green">✓ Yes</span></td><td><span class="badge-green">✓ Yes (primary use)</span></td><td><span class="badge-gold">Limited</span></td><td><span class="badge-green">✓ Yes (incl. investment)</span></td></tr>
+        <tr><td>Owner-Occupied Required</td><td>Yes (51%+)</td><td>Yes (51%+)</td><td>Yes</td><td><span class="badge-green">No</span></td></tr>
+        <tr><td>U.S. Citizenship Required</td><td>All owners</td><td>All owners</td><td>All owners</td><td><span class="badge-green">More flexible</span></td></tr>
+        <tr><td>Acquisition / Franchise</td><td><span class="badge-green">✓ Yes</span></td><td><span class="badge-gray">✗ No</span></td><td><span class="badge-gold">Limited</span></td><td><span class="badge-gold">Case by case</span></td></tr>
+        <tr><td>Location Restriction</td><td>None</td><td>None</td><td>None</td><td>Rural only (&lt;50K pop.)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="text-align:center;margin-top:3rem;">
+    <a href="eligibility.html" class="btn-gold" style="font-size:1rem;padding:1rem 2.5rem;">Find My Best Loan Match →</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Capital<span>Bridge</span></div>
+  <p>SBA Loan Brokerage &mdash; Serving Small Business Owners Nationwide</p>
+  <p>📞 (310) 999-9999 &nbsp;|&nbsp; <a href="mailto:info@capitalbridge.com">info@capitalbridge.com</a></p>
+</footer>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.loan-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top: document.querySelector('.tabs-nav').offsetTop - 80, behavior: 'smooth'});
+}
+
+// URL hash로 직접 탭 열기 지원
+window.addEventListener('DOMContentLoaded', function() {
+  const hash = location.hash.replace('#','');
+  if (['7a','504','express','usda'].includes(hash)) {
+    document.querySelectorAll('.loan-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + hash).classList.add('active');
+    document.querySelectorAll('.tab-btn')[['7a','504','express','usda'].indexOf(hash)].classList.add('active');
+  }
+});
+</script>
+</body>
+</html>
